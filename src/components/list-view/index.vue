@@ -7,28 +7,40 @@
     <div class="com-action">
       <el-button type="primary" icon="el-icon-search" @click="search" v-if="searchSwitch">搜索</el-button>
       <el-button type="success" icon="el-icon-plus" @click="openDialog(-1)" v-if="createSwitch">创建</el-button>
-      <el-button type="danger" icon="el-icon-delete" v-if="checkboxSwitch">批量删除</el-button>
+      <el-button type="danger" icon="el-icon-delete" v-if="checkboxSwitch" @click="delS">批量删除</el-button>
       <el-button type="warning" icon="el-icon-document" v-if="exportSwitch">数据导出</el-button>
     </div>
   </el-card>
 
   <el-card shadow="never" class="data-list">
     <el-divider content-position="left">数据</el-divider>
-    <el-table :data="rows" :row-key="rowKey" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" lazy  :load="load">
+    <el-table
+        :data="rows"
+        :row-key="rowKey"
+        :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+        lazy
+        :load="load"
+        @selection-change="selectionChange">
       <el-table-column type="selection" width="50" v-if="checkboxSwitch"></el-table-column>
       <el-table-column type="expand" width="50" v-if="expandColumns.length > 0">
         <template #default="scope">
           <el-form label-position="right" inline>
             <template v-for="(item, index) in columns" :key="index">
               <el-form-item v-if="expandColumns.indexOf(item.value) !== -1" :label="item.label" class="expand-item">
-                <span>{{ scope.row[item.value] }}</span>
+                <my-column v-if="item.render" :render="item.render" :row="scope.row" :column="item" :index="scope.$index" />
+                <span v-else>{{ scope.row[item.prop] }}</span>
               </el-form-item>
             </template>
           </el-form>
         </template>
       </el-table-column>
       <template v-for="(item, index) in columns" :key="index">
-        <el-table-column v-if="expandColumns.indexOf(item.value) === -1" :prop="item.value" :label="item.label"></el-table-column>
+        <el-table-column v-if="expandColumns.indexOf(item.prop) === -1" :prop="item.prop" :label="item.label">
+          <template #default="scope">
+            <my-column v-if="item.render" :render="item.render" :row="scope.row" :column="item" :index="scope.$index" />
+            <span v-else>{{ scope.row[item.prop] }}</span>
+          </template>
+        </el-table-column>
       </template>
       <el-table-column label="状态" v-if="statusSwitch">
         <template #default="scope">
@@ -55,12 +67,34 @@
 </template>
 
 <script>
-import {onMounted, ref} from "vue";
+import {h, onMounted, reactive, ref} from "vue";
 import myDialog from '../my-dialog'
 import { confirm } from '../../element-plus/util'
 export default {
   name: "index",
-  components: {myDialog},
+  components: {
+    myDialog,
+    myColumn: {
+      functional: true,
+      props: {
+        row: Object,
+        render: Function,
+        index: Number,
+        column: {
+          type: Object
+        }
+      },
+      setup(props){
+        return ()=> {
+          const params = {
+            row: props.row,
+            index: props.index
+          }
+          return h(props.render, params)
+        }
+      }
+    }
+  },
   props: {
     columns: {
       type: Array,
@@ -138,6 +172,7 @@ export default {
   setup(props, { emit }){
     let currentIndex = -1
     let dialogStatus = ref(true)
+    let currentRows = reactive([])
     const myDialogRef = ref()
 
     /**
@@ -172,6 +207,29 @@ export default {
     }
 
     /**
+     * 获取选中的row
+     * @param rows row 数据
+     */
+    const selectionChange = (rows) => {
+      if(rows.length > 0) {
+        rows.forEach(item => {
+          currentRows.push(item.id)
+        })
+      } else {
+        currentRows = []
+      }
+    }
+
+    /**
+     * 批量删除
+     */
+    const delS = () => {
+      confirm(() => {
+        console.log(currentRows[0])
+      })
+    }
+
+    /**
      * 搜索
      */
     const search = () => {
@@ -184,7 +242,10 @@ export default {
      */
     const statusChangeBefore = () => {
       return new Promise((resolve) => {
-          return resolve(true)
+          confirm(() => {
+            alert('index')
+            return resolve(true)
+          })
       })
     }
 
@@ -206,9 +267,11 @@ export default {
       openDialog,
       submitDialog,
       del,
+      delS,
       search,
       statusChangeBefore,
       load,
+      selectionChange,
       dialogStatus,
       myDialogRef,
       currentIndex

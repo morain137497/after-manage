@@ -20,16 +20,22 @@ export default {
         name: 'jzz',
         phone: '123456789',
         status: 1
+      },
+      {
+        id: 2,
+        name: 'jzz',
+        phone: '123456789',
+        status: 0
       }
     ])
     const columns = reactive([
       {
         label: '姓名',
-        value: 'name'
+        prop: 'name'
       },
       {
         label: '手机号',
-        value: 'phone'
+        prop: 'phone'
       }
     ])
 
