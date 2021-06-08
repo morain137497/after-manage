@@ -23,6 +23,7 @@ export default {
 
     const closeDialog = () => {
       dialogStatus.value = false
+      emit('closeDialog')
     }
 
     const submitDialog = () => {

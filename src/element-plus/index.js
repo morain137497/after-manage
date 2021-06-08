@@ -19,6 +19,11 @@ import {
     ElPagination,
     ElBreadcrumb,
     ElBreadcrumbItem,
+    ElCheckbox,
+    ElCheckboxGroup,
+    ElSelect,
+    ElOption,
+    ElUpload
 } from 'element-plus';
 
 export const components = [
@@ -42,4 +47,9 @@ export const components = [
     ElPagination,
     ElBreadcrumb,
     ElBreadcrumbItem,
+    ElCheckbox,
+    ElCheckboxGroup,
+    ElSelect,
+    ElOption,
+    ElUpload
 ]

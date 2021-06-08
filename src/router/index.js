@@ -34,25 +34,25 @@ const routes = [
     },
     children: [
       {
-        path: 'admin-list',
-        name: 'adminList',
+        path: 'admin',
+        name: 'admin',
         meta: {
           title: '管理员列表'
         },
-        component: () => import('../views/index')
+        component: () => import('../views/system/admin')
       },
       {
-        path: 'role-list',
-        name: 'roleList',
+        path: 'role',
+        name: 'role',
         meta: {
           title: '角色列表'
         },
-        component: () => import('../views/index')
+        component: () => import('../views/system/admin')
       }
     ]
   },
   {
-    path: '/login',
+    path: '/login-user',
     name: 'Login',
     meta: {
       sidebar: false

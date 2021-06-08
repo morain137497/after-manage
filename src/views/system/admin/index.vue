@@ -1,0 +1,70 @@
+<template>
+  <list-view :rows="rows"
+             :columns="columns"
+             :search-columns="searchColumns"
+             :dialog-form-columns="dialogFormColumns"
+             :dialog-form-rules="dialogFormRules"
+             :dialog-form-default="formInfo"
+             @openDialog="openDialog"
+             @submitDialog="submitDialog"
+             @search="search">
+  </list-view>
+</template>
+
+<script>
+import ListView from '../../../components/list-view'
+import { responsiveData, NoResponsiveData, getRows, getUseRoles  } from './admin'
+import {ref, toRefs} from 'vue'
+export default {
+  name: "index",
+  components: {ListView},
+  setup(){
+    getRows()
+    getUseRoles()
+
+    let currentRowIndex = ref(-1)
+    /**
+     * 打开 dialog
+     * @param index 数据行索引
+     */
+    const openDialog = (index) => {
+      currentRowIndex.value = index
+      // if(index !== -1) {
+      //   responsiveData.formInfo.roleIds = []
+      //   responsiveData.rows[index].roleList.forEach(item => {
+      //     responsiveData.formInfo.roleIds.push(item.id)
+      //   })
+      //   responsiveData.formInfo.mobile = responsiveData.rows[index].mobile
+      // }
+    }
+    /**
+     * 提交dialog
+     * @param data
+     */
+    const submitDialog = (data) => {
+      console.log(data)
+    }
+
+    /**
+     * 搜索
+     * @param data
+     */
+    const search = (data) => {
+        console.log(data)
+    }
+
+    return{
+      ...toRefs(responsiveData),
+      ...toRefs(NoResponsiveData),
+      currentRowIndex,
+      openDialog,
+      submitDialog,
+      search
+    }
+  }
+}
+</script>
+
+<style scoped>
+
+</style>
