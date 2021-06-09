@@ -1,6 +1,5 @@
 import {h, reactive} from 'vue'
 import {FORM_TYPE} from '../../../consts';
-import { adminList } from '../../../http/api/admin'
 
 export const responsiveData = reactive({
     columns: [
@@ -75,6 +74,16 @@ export const NoResponsiveData = {
             type: FORM_TYPE.INPUT,
             inputType: 'password',
         },
+        startDate: {
+            label: '开始日期',
+            placeholder: '请选择开始日期',
+            type: FORM_TYPE.DATE_SELECT
+        },
+        startTime: {
+            label: '开始时间',
+            placeholder: '请选择开始时间',
+            type: FORM_TYPE.TIME_SELECT,
+        },
         status: {
             label: '状态',
             placeholder: '请输选择',
@@ -119,18 +128,14 @@ export const NoResponsiveData = {
     }
 }
 
-export const getRows = async (params) => {
-    const result = await adminList(params)
-    if(result.code == 0) {
-        console.log(result)
-        // responsiveData.rows = result.
-    }
+export const getRows = async () => {
     responsiveData.rows = [
         {
             id: 1,
             mobile: '123456789',
             password: '123456789',
             roleIds: [1,2],
+            startDate: '2021-03-12',
             roleList: [
                 {
                     id: 1,
@@ -146,6 +151,7 @@ export const getRows = async (params) => {
         {
             id: 2,
             mobile: '123456789',
+            password: '123456789',
             roleIds: [1],
             roleList: [
                 {

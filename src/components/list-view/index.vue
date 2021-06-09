@@ -1,8 +1,8 @@
 <template>
-  <el-card shadow="never" class="search-box" v-if="searchSwitch || createSwitch || checkboxSwitch || exportSwitch">
+  <el-card shadow="never" class="search-box">
     <el-divider content-position="left">操作</el-divider>
     <el-form :inline="true" :model="searchForm">
-      <el-form-item v-for="(item, key, index) in searchColumns" :key="index" :label="item.label">
+      <el-form-item v-for="(item, key, index) in searchRows" :key="index" :label="item.label">
         <el-input v-if="item.type === FORM_TYPE.INPUT" :placeholder="item.placeholder" v-model="searchForm[key]"/>
         <el-select v-if="item.type === FORM_TYPE.SELECT" v-model="searchForm[key]" :placeholder="item.placeholder">
           <el-option v-for="(v, i) in item.list" :key="i" :label="v[item.keys.label]" :value="v[item.keys.value]"></el-option>
@@ -11,8 +11,8 @@
       <slot name="searchSlot"></slot>
     </el-form>
     <div class="com-action">
-      <el-button type="primary" icon="el-icon-search" @click="search" v-if="searchSwitch">搜索</el-button>
-      <el-button type="success" icon="el-icon-plus" @click="openDialog(-1)" v-if="createSwitch">创建</el-button>
+      <el-button type="primary" icon="el-icon-search" @click="search" v-if="Object.keys(searchRows).length !== 0">搜索</el-button>
+      <el-button type="success" icon="el-icon-plus" @click="openDialog(-1)" v-if="Object.keys(dialogFormRows).length !== 0">创建</el-button>
       <el-button type="danger" icon="el-icon-delete" v-if="checkboxSwitch" @click="delS">批量删除</el-button>
       <el-button type="warning" icon="el-icon-document" v-if="exportSwitch">数据导出</el-button>
     </div>
@@ -25,6 +25,7 @@
         :row-key="rowKey"
         :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
         lazy
+        empty-text="暂无数据"
         :load="load"
         @selection-change="selectionChange">
       <el-table-column type="selection" width="50" v-if="checkboxSwitch"></el-table-column>
@@ -68,7 +69,7 @@
   <my-dialog ref="myDialogRef" @submitDialog="submitDialog" @closeDialog="closeDialog">
     <template v-slot:myDialogSlot>
       <el-form label-position="top" :model="dialogForm" :rules="dialogFormRules" ref="dialogFormRef">
-        <el-form-item v-for="(item, key, index) in dialogFormColumns" :key="index" :label="item.label" :prop="key">
+        <el-form-item v-for="(item, key, index) in dialogFormRows" :key="index" :label="item.label" :prop="key">
           <el-input v-if="item.type === FORM_TYPE.INPUT" :disabled="item.disabled" :placeholder="item.placeholder" v-model="dialogForm[key]"/>
           <el-checkbox-group v-if="item.type === FORM_TYPE.CHECKBOX" v-model="dialogForm[key]">
             <el-checkbox v-for="(v, i) in item.list" :key="i" :label="v[item.keys.value]">{{v[item.keys.label]}}</el-checkbox>
@@ -77,6 +78,8 @@
             <el-option v-for="(v, i) in item.list" :key="i" :label="v[item.keys.label]" :value="v[item.keys.value]"></el-option>
           </el-select>
           <image-upload v-if="item.type === FORM_TYPE.IMAGE_UPLOAD" />
+          <el-date-picker v-if="item.type === FORM_TYPE.DATE_SELECT" v-model="dialogForm[key]" :format="item.format?item.format:'YYYY-MM-DD'" :type="item.inputType?item.inputType:'date'" :placeholder="item.placeholder"></el-date-picker>
+          <el-time-picker v-if="item.type === FORM_TYPE.TIME_SELECT" v-model="dialogForm[key]" :format="item.format?item.format:'HH:mm:ss'" :placeholder="item.placeholder"></el-time-picker>
         </el-form-item>
         <slot name="dialogContentSlot"></slot>
       </el-form>
@@ -190,13 +193,13 @@ export default {
         return 'id'
       }
     },
-    searchColumns: {
-      type: Array,
+    searchRows: {
+      type: Object,
       default(){
-        return []
+        return {}
       }
     },
-    dialogFormColumns: {
+    dialogFormRows: {
       type: Object,
       default(){
         return {}
@@ -235,9 +238,9 @@ export default {
       if(index !== -1) {
         myDialogRef.value.title = '修改'
         currentIndex = index
-        if(Object.keys(props.dialogFormColumns).length !== 0) {
-          Object.keys(props.dialogFormColumns).forEach(key => {
-            const item = props.dialogFormColumns[key]
+        if(Object.keys(props.dialogFormRows).length !== 0) {
+          Object.keys(props.dialogFormRows).forEach(key => {
+            const item = props.dialogFormRows[key]
             data.dialogForm[key] = props.rows[index][key]
             if(item.type === FORM_TYPE.CHECKBOX) {
               data.dialogForm[key] = []
@@ -335,9 +338,9 @@ export default {
 
 
     const searchValues = () => {
-      if(Object.keys(props.searchColumns).length !== 0) {
-        Object.keys(props.searchColumns).forEach(key => {
-          const item = props.searchColumns[key]
+      if(Object.keys(props.searchRows).length !== 0) {
+        Object.keys(props.searchRows).forEach(key => {
+          const item = props.searchRows[key]
           if(item.type === FORM_TYPE.INPUT) {
             data.searchForm[key] = ''
           }
@@ -346,9 +349,9 @@ export default {
     }
 
     const dialogFormValues = () => {
-      if(Object.keys(props.dialogFormColumns).length !== 0) {
-        Object.keys(props.dialogFormColumns).forEach(key => {
-          const item = props.dialogFormColumns[key]
+      if(Object.keys(props.dialogFormRows).length !== 0) {
+        Object.keys(props.dialogFormRows).forEach(key => {
+          const item = props.dialogFormRows[key]
           if(item.type === FORM_TYPE.INPUT) {
             data.dialogForm[key] = ''
           }

@@ -23,7 +23,9 @@ import {
     ElCheckboxGroup,
     ElSelect,
     ElOption,
-    ElUpload
+    ElUpload,
+    ElDatePicker,
+    ElTimePicker
 } from 'element-plus';
 
 export const components = [
@@ -51,5 +53,7 @@ export const components = [
     ElCheckboxGroup,
     ElSelect,
     ElOption,
-    ElUpload
+    ElUpload,
+    ElDatePicker,
+    ElTimePicker
 ]

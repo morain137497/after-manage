@@ -1,7 +1,6 @@
 <template>
   <el-upload
-      list-type="picture-card"
-  >
+      list-type="picture-card">
     <i class="el-icon-upload"></i>
   </el-upload>
 </template>

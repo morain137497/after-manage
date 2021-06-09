@@ -1,8 +1,8 @@
 <template>
   <list-view :rows="rows"
              :columns="columns"
-             :search-columns="searchColumns"
-             :dialog-form-columns="dialogFormColumns"
+             :search-rows="searchColumns"
+             :dialog-form-rows="dialogFormColumns"
              :dialog-form-rules="dialogFormRules"
              :dialog-form-default="formInfo"
              @openDialog="openDialog"
@@ -29,13 +29,6 @@ export default {
      */
     const openDialog = (index) => {
       currentRowIndex.value = index
-      // if(index !== -1) {
-      //   responsiveData.formInfo.roleIds = []
-      //   responsiveData.rows[index].roleList.forEach(item => {
-      //     responsiveData.formInfo.roleIds.push(item.id)
-      //   })
-      //   responsiveData.formInfo.mobile = responsiveData.rows[index].mobile
-      // }
     }
     /**
      * 提交dialog
