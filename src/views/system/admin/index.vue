@@ -2,9 +2,9 @@
   <list-view :rows="rows"
              :columns="columns"
              :search-rows="searchColumns"
-             :dialog-form-rows="dialogFormColumns"
+             :dialog-form-rows="dialogFormRows"
              :dialog-form-rules="dialogFormRules"
-             :dialog-form-default="formInfo"
+             :dialog-form-default="defaultFormInfo"
              @openDialog="openDialog"
              @submitDialog="submitDialog"
              @search="search">
@@ -13,8 +13,8 @@
 
 <script>
 import ListView from '../../../components/list-view'
-import { responsiveData, NoResponsiveData, getRows, getUseRoles  } from './admin'
-import {ref, toRefs} from 'vue'
+import { data, getRows, getUseRoles  } from './admin'
+import {ref} from 'vue'
 export default {
   name: "index",
   components: {ListView},
@@ -47,8 +47,7 @@ export default {
     }
 
     return{
-      ...toRefs(responsiveData),
-      ...toRefs(NoResponsiveData),
+      ...data,
       currentRowIndex,
       openDialog,
       submitDialog,

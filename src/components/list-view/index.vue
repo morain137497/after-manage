@@ -5,7 +5,7 @@
       <el-form-item v-for="(item, key, index) in searchRows" :key="index" :label="item.label">
         <el-input v-if="item.type === FORM_TYPE.INPUT" :placeholder="item.placeholder" v-model="searchForm[key]"/>
         <el-select v-if="item.type === FORM_TYPE.SELECT" v-model="searchForm[key]" :placeholder="item.placeholder">
-          <el-option v-for="(v, i) in item.list" :key="i" :label="v[item.keys.label]" :value="v[item.keys.value]"></el-option>
+          <el-option v-for="(v, i) in item.option" :key="i" :label="v[item.keys.label]" :value="v[item.keys.value]"></el-option>
         </el-select>
       </el-form-item>
       <slot name="searchSlot"></slot>
@@ -72,10 +72,10 @@
         <el-form-item v-for="(item, key, index) in dialogFormRows" :key="index" :label="item.label" :prop="key">
           <el-input v-if="item.type === FORM_TYPE.INPUT" :disabled="item.disabled" :placeholder="item.placeholder" v-model="dialogForm[key]"/>
           <el-checkbox-group v-if="item.type === FORM_TYPE.CHECKBOX" v-model="dialogForm[key]">
-            <el-checkbox v-for="(v, i) in item.list" :key="i" :label="v[item.keys.value]">{{v[item.keys.label]}}</el-checkbox>
+            <el-checkbox v-for="(v, i) in item.option" :key="i" :label="v[item.keys.value]">{{v[item.keys.label]}}</el-checkbox>
           </el-checkbox-group>
           <el-select v-if="item.type === FORM_TYPE.SELECT" v-model="dialogForm[key]" :placeholder="item.placeholder">
-            <el-option v-for="(v, i) in item.list" :key="i" :label="v[item.keys.label]" :value="v[item.keys.value]"></el-option>
+            <el-option v-for="(v, i) in item.option" :key="i" :label="v[item.keys.label]" :value="v[item.keys.value]"></el-option>
           </el-select>
           <image-upload v-if="item.type === FORM_TYPE.IMAGE_UPLOAD" />
           <el-date-picker v-if="item.type === FORM_TYPE.DATE_SELECT" v-model="dialogForm[key]" :format="item.format?item.format:'YYYY-MM-DD'" :type="item.inputType?item.inputType:'date'" :placeholder="item.placeholder"></el-date-picker>
@@ -91,7 +91,7 @@
 import {h, reactive, ref, toRefs} from "vue";
 import myDialog from '../my-dialog'
 import { confirm } from '../../element-plus/util'
-import { FORM_TYPE } from '../../consts'
+import { FORM_TYPE, FORM_DATA_TYPE } from '../../consts'
 import imageUpload from '../image-upload'
 import { resetFields } from '../../utils/data'
 export default {
@@ -119,6 +119,13 @@ export default {
         }
       }
     }
+  },
+  emits: {
+    openDialog:null,
+    submitDialog:null,
+    closeDialog:null,
+    search:null,
+    load:null
   },
   props: {
     columns: {
@@ -242,7 +249,7 @@ export default {
           Object.keys(props.dialogFormRows).forEach(key => {
             const item = props.dialogFormRows[key]
             data.dialogForm[key] = props.rows[index][key]
-            if(item.type === FORM_TYPE.CHECKBOX) {
+            if(item.dataType === FORM_DATA_TYPE.ARRAY) {
               data.dialogForm[key] = []
               props.rows[index][key].forEach(value => {
                 data.dialogForm[key].push(value)
@@ -253,7 +260,6 @@ export default {
       } else {
         myDialogRef.value.title = '创建'
       }
-      // data.dialogForm = props.dialogFormDefault
       emit('openDialog', index)
     }
 

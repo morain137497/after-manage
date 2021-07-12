@@ -1,7 +1,8 @@
-import {h, reactive} from 'vue'
-import {FORM_TYPE} from '../../../consts';
+import {h} from 'vue'
+import {FORM_TYPE, FORM_DATA_TYPE} from '../../../consts';
 
-export const responsiveData = reactive({
+
+export const data = {
     columns: [
         {
             label: '手机号',
@@ -26,14 +27,12 @@ export const responsiveData = reactive({
         }
     ],
     rows: [],
-    formInfo: {
+    defaultFormInfo: {
         id: 0,
         mobile: '',
         password: '',
         roleIds: []
     },
-})
-export const NoResponsiveData = {
     searchColumns: {
         mobile: {
             label: '手机号',
@@ -49,7 +48,7 @@ export const NoResponsiveData = {
                 label: 'label',
                 value: 'id'
             },
-            list: [
+            option: [
                 {
                     id: 0,
                     label: '冻结'
@@ -61,7 +60,7 @@ export const NoResponsiveData = {
             ]
         },
     },
-    dialogFormColumns: {
+    dialogFormRows: {
         mobile: {
             label: '手机号',
             placeholder: '请输入手机号',
@@ -92,7 +91,7 @@ export const NoResponsiveData = {
                 label: 'label',
                 value: 'id'
             },
-            list: [
+            option: [
                 {
                     id: 0,
                     label: '冻结'
@@ -106,11 +105,12 @@ export const NoResponsiveData = {
         roleIds: {
             label: '角色',
             type: FORM_TYPE.CHECKBOX,
+            dataType: FORM_DATA_TYPE.ARRAY,
             keys: {
                 label: 'name',
                 value: 'id'
             },
-            list: []
+            option: []
         }
     },
     dialogFormRules: {
@@ -129,7 +129,7 @@ export const NoResponsiveData = {
 }
 
 export const getRows = async () => {
-    responsiveData.rows = [
+    data.rows = [
         {
             id: 1,
             mobile: '123456789',
@@ -165,7 +165,7 @@ export const getRows = async () => {
 }
 
 export const getUseRoles = () => {
-    NoResponsiveData.dialogFormColumns.roleIds.list = [
+    data.dialogFormRows.roleIds.option = [
         {
             id: 1,
             name: '编辑'
