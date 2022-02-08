@@ -7,6 +7,7 @@
              :dialog-form-default="defaultFormInfo"
              @openDialog="openDialog"
              @submitDialog="submitDialog"
+             @del="del"
              @search="search">
   </list-view>
 </template>
@@ -14,7 +15,7 @@
 <script>
 import ListView from '../../../components/list-view'
 import { data, getRows, getUseRoles  } from './admin'
-import {ref} from 'vue'
+import { ref} from 'vue'
 export default {
   name: "index",
   components: {ListView},
@@ -23,6 +24,7 @@ export default {
     getUseRoles()
 
     let currentRowIndex = ref(-1)
+
     /**
      * 打开 dialog
      * @param index 数据行索引
@@ -46,12 +48,21 @@ export default {
         console.log(data)
     }
 
+    /**
+     * 删除
+     * @param index
+     */
+    const del = (index) => {
+      data.rows.value.splice(index, 1)
+    }
+
     return{
       ...data,
       currentRowIndex,
       openDialog,
       submitDialog,
-      search
+      search,
+      del
     }
   }
 }

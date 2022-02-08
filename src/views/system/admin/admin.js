@@ -1,4 +1,4 @@
-import {h} from 'vue'
+import {h, ref} from 'vue'
 import {FORM_TYPE, FORM_DATA_TYPE} from '../../../consts';
 
 
@@ -129,7 +129,7 @@ export const data = {
 }
 
 export const getRows = async () => {
-    data.rows = [
+    data.rows = ref([
         {
             id: 1,
             mobile: '123456789',
@@ -161,7 +161,7 @@ export const getRows = async () => {
             ],
             status: 0
         }
-    ]
+    ])
 }
 
 export const getUseRoles = () => {

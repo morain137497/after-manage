@@ -66,7 +66,7 @@
     </div>
   </el-card>
 
-  <my-dialog ref="myDialogRef" @submitDialog="submitDialog" @closeDialog="closeDialog">
+  <my-dialog ref="myDialogRef" @submitDialog="submitDialog" @closeDialog="closeDialog" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
     <template v-slot:myDialogSlot>
       <el-form label-position="top" :model="dialogForm" :rules="dialogFormRules" ref="dialogFormRef">
         <el-form-item v-for="(item, key, index) in dialogFormRows" :key="index" :label="item.label" :prop="key">
@@ -285,7 +285,7 @@ export default {
      */
     const del = (index) => {
       confirm(() => {
-        alert(index)
+        emit('del', index)
       })
     }
 
